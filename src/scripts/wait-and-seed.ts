@@ -56,35 +56,42 @@ async function run() {
   rmqHost = rmqHost || 'rabbitmq';
   rmqPort = rmqPort || 5672;
 
-  try {
-    console.log(`Waiting for DB ${dbHost}:${dbPort} ...`);
-    await waitForPort(dbHost, dbPort);
-    console.log(`DB reachable: ${dbHost}:${dbPort}`);
+  // Start main process immediately so the service remains up even if DB is not ready.
+  console.log('Starting server (will run even if DB/RabbitMQ are not ready)');
+  const server = spawn('node', ['dist/index.js'], { stdio: 'inherit' });
+  const forward = (sig: NodeJS.Signals) => {
+    server.kill(sig);
+  };
+  process.on('SIGTERM', () => forward('SIGTERM'));
+  process.on('SIGINT', () => forward('SIGINT'));
 
-    console.log(`Waiting for RabbitMQ ${rmqHost}:${rmqPort} ...`);
-    await waitForPort(rmqHost, rmqPort);
-    console.log(`RabbitMQ reachable: ${rmqHost}:${rmqPort}`);
+  // Run seed in background and keep retrying until it succeeds.
+  (async function backgroundSeed() {
+    const retryDelay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    while (true) {
+      try {
+        console.log(`Checking DB ${dbHost}:${dbPort} ...`);
+        await waitForPort(dbHost, dbPort, 5000);
+        console.log(`DB reachable: ${dbHost}:${dbPort}`);
 
-    // Run seed (compiled JS)
-    console.log('Running seed script...');
-    await new Promise<void>((resolve, reject) => {
-      const ps = spawn('node', ['dist/scripts/seed.js'], { stdio: 'inherit' });
-      ps.on('exit', (code) => (code === 0 ? resolve() : reject(new Error('seed failed'))));
-      ps.on('error', reject);
-    });
-    console.log('Seed finished; starting server');
+        console.log(`Checking RabbitMQ ${rmqHost}:${rmqPort} ...`);
+        await waitForPort(rmqHost, rmqPort, 5000);
+        console.log(`RabbitMQ reachable: ${rmqHost}:${rmqPort}`);
 
-    // Start main process
-    const server = spawn('node', ['dist/index.js'], { stdio: 'inherit' });
-    const forward = (sig: NodeJS.Signals) => {
-      server.kill(sig);
-    };
-    process.on('SIGTERM', () => forward('SIGTERM'));
-    process.on('SIGINT', () => forward('SIGINT'));
-  } catch (err) {
-    console.error('wait-and-seed failed', err);
-    process.exit(1);
-  }
+        console.log('Running seed script...');
+        await new Promise<void>((resolve, reject) => {
+          const ps = spawn('node', ['dist/scripts/seed.js'], { stdio: 'inherit' });
+          ps.on('exit', (code) => (code === 0 ? resolve() : reject(new Error('seed failed'))));
+          ps.on('error', reject);
+        });
+        console.log('Seed finished');
+        break; // done
+      } catch (err) {
+        console.error('Seed attempt failed, will retry in 5s', err);
+        await retryDelay(5000);
+      }
+    }
+  })();
 }
 
 run();
