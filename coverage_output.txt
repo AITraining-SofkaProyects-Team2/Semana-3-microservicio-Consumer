@@ -1,0 +1,69 @@
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+ RUN  v2.1.9 /home/ale/Documents/proyectos/juntandotodo/Semana-3-microservicio-Consumer
+      Coverage enabled with v8
+
+ ✓ src/repositories/InMemoryIncidentRepository.test.ts (3 tests) 9ms
+stdout | src/utils/ExponentialBackoff.test.ts > ExponentialBackoff > usa config por defecto si no se provee
+[2026-03-01T22:50:52.961Z] [INFO] Scheduling retry with backoff {"attempt":1,"delayMs":891}
+
+ ✓ src/utils/ExponentialBackoff.test.ts (6 tests) 32ms
+stdout | tests/EXTRA_COVERAGE.test.ts > Consumer — Extra Coverage > ExponentialBackoff > should calculate delay and increment attempt
+[2026-03-01T22:50:53.007Z] [INFO] Scheduling retry with backoff {"attempt":1,"delayMs":116}
+
+ ✓ tests/EXTRA_COVERAGE.test.ts (10 tests) 18ms
+ ✓ src/processor.test.ts (15 tests) 15ms
+ ✓ tests/UNIT_TEST.test.ts (9 tests) 26ms
+ ✓ src/messaging/MessageHandler.test.ts (12 tests) 38ms
+
+ Test Files  6 passed (6)
+      Tests  55 passed (55)
+   Start at  19:50:51
+   Duration  1.27s (transform 617ms, setup 0ms, collect 1.10s, tests 138ms, environment 3ms, prepare 1.56s)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   43.28 |    85.52 |   79.06 |   43.28 |                   
+ src               |     100 |      100 |     100 |     100 |                   
+  processor.ts     |     100 |      100 |     100 |     100 |                   
+ src/lifecycle     |       0 |        0 |       0 |       0 |                   
+  ...ulShutdown.ts |       0 |        0 |       0 |       0 | 1-21              
+  healthServer.ts  |       0 |        0 |       0 |       0 | 1-35              
+ src/messaging     |   52.38 |    89.28 |      80 |   52.38 |                   
+  ...ionManager.ts |       0 |        0 |       0 |       0 |                   
+  ...ageHandler.ts |     100 |     92.3 |     100 |     100 | 60,144            
+  ...ionManager.ts |       0 |        0 |       0 |       0 | 1-178             
+ src/repositories  |   27.27 |       75 |      75 |   27.27 |                   
+  ...Repository.ts |       0 |        0 |       0 |       0 |                   
+  ...Repository.ts |     100 |      100 |     100 |     100 |                   
+  ...Repository.ts |       0 |        0 |       0 |       0 | 1-52              
+ src/scripts       |       0 |        0 |       0 |       0 |                   
+  seed.ts          |       0 |        0 |       0 |       0 | 1-123             
+  wait-and-seed.ts |       0 |        0 |       0 |       0 | 1-97              
+ src/strategies    |     100 |      100 |     100 |     100 |                   
+  ...ceStrategy.ts |     100 |      100 |     100 |     100 |                   
+  ...tyStrategy.ts |     100 |      100 |     100 |     100 |                   
+  ...ceStrategy.ts |     100 |      100 |     100 |     100 |                   
+  ...tyStrategy.ts |       0 |        0 |       0 |       0 |                   
+  ...esStrategy.ts |     100 |      100 |     100 |     100 |                   
+  ...tyResolver.ts |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ src/types         |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ src/utils         |   75.47 |    84.21 |   82.35 |   75.47 |                   
+  ...ialBackoff.ts |     100 |      100 |     100 |     100 |                   
+  ILogger.ts       |       0 |        0 |       0 |       0 |                   
+  database.ts      |       0 |        0 |       0 |       0 | 1-38              
+  logger.ts        |      76 |       60 |      60 |      76 | 39-40,42-43,46-47 
+  metrics.ts       |     100 |      100 |     100 |     100 |                   
+  typeGuards.ts    |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 43.28% ( 261/603 )
+Branches     : 85.52% ( 65/76 )
+Functions    : 79.06% ( 34/43 )
+Lines        : 43.28% ( 261/603 )
+================================================================================
